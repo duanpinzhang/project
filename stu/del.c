@@ -4,20 +4,45 @@
 #include <mysql/mysql.h>
 #include "cgic.h"
 
+char * headname = "head.html";
+char * footname = "footer.html";
+
 int cgiMain()
 {
+
+	FILE * fd;
 
 	fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
 
 	char sno[32] = "\0";
 	char flag[4] = "\0";
+	char ch;
 	int status = 0;
+
+	fprintf(cgiOut, "Content-type:text/html;charset=utf-8\n\n");
+	if(!(fd = fopen(headname, "r"))){
+		fprintf(cgiOut, "Cannot open file, %s\n", headname);
+		return -1;
+	}
+	ch = fgetc(fd);
+
+	while(ch != EOF){
+		fprintf(cgiOut, "%c", ch);
+		ch = fgetc(fd);
+	}
+fclose(fd);
 
 
 	status = cgiFormString("sno",  sno, 32);
 	if (status != cgiFormSuccess)
 	{
 		fprintf(cgiOut, "get sno error!\n");
+		return 1;
+	}
+	status = cgiFormString("flag",  flag, 4);
+	if (status != cgiFormSuccess)
+	{
+		fprintf(cgiOut, "get flag error!\n");
 		return 1;
 	}
 
